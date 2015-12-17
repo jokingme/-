@@ -1,0 +1,17 @@
+//
+//  MovieStepViewController.h
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/17.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
+
+@interface MovieStepViewController : UIViewController
+@property (nonatomic,retain) NSNumber *movieId;
+@property (nonatomic,assign) int hasVideo;
+@property (nonatomic,copy) NSString *Duration;
+@property (nonatomic,retain) NSNumber *recipedId;
+@end

@@ -1,0 +1,15 @@
+//
+//  MeiShi.h
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/16.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#ifndef Kuitan_MeiShi_h
+#define Kuitan_MeiShi_h
+#define ListURL @"http://api.haodou.com/index.php?appid=2&appkey=9ef269eec4f7a9d07c73952d06b5413f&format=json&sessionid=1444822122658&vc=76&vn=5.3.0&loguid=0&deviceid=haodou862845026824156&uuid=c5b781e311b6e1d18af5e2e536a88c7a&channel=360_v530&method=Search.getCateList&virtual=&signmethod=md5&v=2&timestamp=1444822154&nonce=0.4937065500926159&appsign=9c3e285f7a38e047e8e223912d1b8b58"
+#define DetailUrl @"http://api.haodou.com/index.php?appid=2&appkey=9ef269ed07c73952d06b5413f&format=json&sessionid=1444904543345&vc=76&vn=5.3.0&loguid=0&deviceid=haodou862845026824156&uuid=c5b781e311b6e1d18af5e2e536a88c7a&channel=360_v530&method=Search.getList&virtual=&signmethod=md5&v=2&timestamp=1444908882&nonce=0.3991454709741592&appsign=103675d4d2b547e94eb9a51e949076f7"
+#define MovieStepUrl @"http://api.haodou.com/index.php?appid=2&appkey=9ef269eec4f7a9d07c73952d06b5413f&format=json&sessionid=1445069645077&vc=76&vn=5.3.0&loguid=0&deviceid=haodou862845026824156&uuid=c5b781e311b6e1d18af5e2e536a88c7a&channel=360_v530&method=Info.getInfo&virtual=&signmethod=md5&v=2&timestamp=1445069847&nonce=0.7319060246916821&appsign=4d90fbfe7b2a3db61a01e2a82898ca00"
+
+#endif

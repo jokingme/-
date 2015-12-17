@@ -1,0 +1,85 @@
+//
+//  showTableViewCell.m
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/16.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#define WIDTH  [[UIScreen mainScreen] applicationFrame].size.width
+
+#import "showTableViewCell.h"
+#import "UIImageView+WebCache.h"
+
+@implementation showTableViewCell
+
+//初始化   设置布局
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self=[super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self)
+    {
+        self.cookpicture = [[UIImageView alloc]initWithFrame:CGRectMake(WIDTH / 40, WIDTH / 20, WIDTH - WIDTH / 20, WIDTH/3)];
+        _cookpicture.image = [UIImage imageNamed:@"loading.png"];
+        [self.contentView addSubview:_cookpicture];
+        self.titleLabel  = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH / 40, WIDTH/3+WIDTH/20, WIDTH - 20, WIDTH/20)];
+        _titleLabel.font = [UIFont systemFontOfSize:16];
+        [self.contentView addSubview:_titleLabel];
+        self.contentLabel = [[UILabel alloc]initWithFrame:CGRectMake(WIDTH / 40, WIDTH/3+WIDTH/8 ,WIDTH -  WIDTH / 20,WIDTH/4)];
+        _contentLabel.numberOfLines = 0;
+
+        _contentLabel.textColor = [UIColor grayColor];
+        _contentLabel.font = [UIFont systemFontOfSize:14];
+        [self.contentView addSubview:_contentLabel];
+    }
+    return self;
+}
+
+//设置传递内容
+- (void)setModel:(ztModel *)model {
+    if (_model != model) {
+        [_model release];
+        _model = [model retain];
+    }
+    [self.cookpicture sd_setImageWithURL:[NSURL URLWithString: model.image] placeholderImage:[UIImage imageNamed:@"loading.png"]];
+    self.titleLabel.text = model.title;
+    self.contentLabel.text = model.text;
+    CGRect frame = CGRectMake(WIDTH / 40, WIDTH/3+WIDTH/8 ,WIDTH - WIDTH/20,  [[self class] heightForContent:model.text] );
+    self.contentLabel.frame = frame;
+}
+
++ (CGFloat)heightForRow:(ztModel *)model {
+    return [[self class] heightForContent:model.text] + WIDTH/3+WIDTH/8 +WIDTH/20;
+}
+
+
+
++ (CGFloat)heightForContent:(NSString *)text {
+    return [text boundingRectWithSize:CGSizeMake(WIDTH, 100000) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14]} context:nil].size.height;
+}
+
+
+
+- (void)awakeFromNib
+{
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
+    
+    
+    
+}
+//-(void)dealloc
+//{
+//    [_cookpicture release];
+//    [_titleLabel release];
+//    [_contentLabel release];
+//}
+
+@end
+
+
+

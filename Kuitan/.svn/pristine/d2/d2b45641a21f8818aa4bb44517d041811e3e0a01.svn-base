@@ -1,0 +1,14 @@
+//
+//  UserCollectionTableViewCell.h
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/23.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface UserCollectionTableViewCell : UITableViewCell
+
+
+@end

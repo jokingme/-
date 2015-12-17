@@ -1,0 +1,101 @@
+//
+//  DetailInfoTableViewCell.m
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/18.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+#define WIDTH [[UIScreen mainScreen] applicationFrame].size.width
+#import "DetailInfoTableViewCell.h"
+#import "UIImageView+WebCache.h"
+
+@implementation DetailInfoTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self.contentView addSubview:self.dishLabel];
+        [self.contentView addSubview:self.userImage];
+        [self.contentView addSubview:self.userNameLabel];
+        [self.contentView addSubview:self.ReviewTimeLabel];
+        [self.contentView addSubview:self.contentLabel];
+    }
+    return self;
+}
+
+
+- (UILabel *)dishLabel {
+    if (!_dishLabel) {
+        self.dishLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH / 40, WIDTH / 40, WIDTH - WIDTH / 20, WIDTH / 10)];
+        _dishLabel.font = [UIFont boldSystemFontOfSize:25];
+    }
+    return _dishLabel;
+}
+
+- (UIImageView *)userImage {
+    if (!_userImage) {
+        self.userImage = [[UIImageView alloc] initWithFrame:CGRectMake(WIDTH / 40, WIDTH / 40 + WIDTH / 10 + WIDTH / 40, WIDTH * 3 / 20, WIDTH * 3 / 20)];
+        _userImage.layer.cornerRadius = WIDTH * 3 / 40;
+        _userImage.layer.masksToBounds = YES;
+    }
+    return _userImage;
+}
+
+- (UILabel *)userNameLabel {
+    if (!_userNameLabel) {
+        self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH / 40 + WIDTH * 3 / 20 + WIDTH / 80, WIDTH / 40 + WIDTH  / 10 + WIDTH / 40 + WIDTH / 80, WIDTH / 2, WIDTH / 20 + WIDTH / 80)];
+    }
+    return _userNameLabel;
+}
+
+- (UILabel *)ReviewTimeLabel {
+    if (!_ReviewTimeLabel) {
+        self.ReviewTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH / 40 + WIDTH * 3 / 20 + WIDTH / 80, WIDTH / 40 + WIDTH / 10 + WIDTH / 40 + WIDTH / 80 + WIDTH / 20 + WIDTH / 80, WIDTH / 2,  WIDTH / 20 + WIDTH / 80)];
+        _ReviewTimeLabel.textColor = [UIColor grayColor];
+    }
+    return _ReviewTimeLabel;
+}
+
+- (UILabel *)contentLabel {
+    if (!_contentLabel) {
+        self.contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(WIDTH / 40, WIDTH / 40 + WIDTH / 10 + WIDTH / 40 + WIDTH * 3 / 20 + WIDTH / 20, WIDTH - WIDTH / 20, 40)];
+        _contentLabel.numberOfLines = 0;
+        _contentLabel.font = [UIFont systemFontOfSize:18];
+    }
+    return _contentLabel;
+}
+
+- (void)setModel:(InfoModel *)model {
+    if (_model != model) {
+        [_model release];
+        _model = [model retain];
+    }
+    self.dishLabel.text = model.Title;
+    self.userNameLabel.text = model.UserName;
+    self.ReviewTimeLabel.text = model.ReviewTime;
+    self.contentLabel.text = model.Intro;
+    [self.userImage sd_setImageWithURL:[NSURL URLWithString:model.Avatar] placeholderImage:nil];
+    CGRect frame = CGRectMake(WIDTH / 40, WIDTH / 40 + WIDTH / 10 + WIDTH / 40 + WIDTH * 3 / 20 + WIDTH / 20, WIDTH - WIDTH / 20, [[self class] heightForContent:model.Intro]);
+    self.contentLabel.frame = frame;
+}
+
++ (CGFloat)heightForRow:(InfoModel *)model {
+    return [[self class] heightForContent:model.Intro] + WIDTH / 40 + WIDTH / 10 + WIDTH / 40 + WIDTH * 3 / 20 + WIDTH / 20 + WIDTH / 40;
+}
+
++ (CGFloat)heightForContent:(NSString *)text {
+    return [text boundingRectWithSize:CGSizeMake(WIDTH - WIDTH / 20, 1000) options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:18]} context:nil].size.height;
+}
+
+- (void)dealloc {
+    self.dishLabel = nil;
+    self.userImage = nil;
+    self.userNameLabel = nil;
+    self.ReviewTimeLabel = nil;
+    self.contentLabel = nil;
+    self.model = nil;
+    [super dealloc];
+}
+
+@end

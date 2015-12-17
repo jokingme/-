@@ -1,0 +1,35 @@
+//
+//  DetailModel.m
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/16.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#import "DetailModel.h"
+
+@implementation DetailModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dictionary {
+    self = [super init];
+    if (self) {
+        [self setValuesForKeysWithDictionary:dictionary];
+    }
+    return self;
+}
+
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key {
+    
+}
+
+- (void)dealloc {
+    self.Title = nil;
+    self.Cover = nil;
+    self.Collection = nil;
+    self.Stuff = nil;
+    self.RecipeId = nil;
+    self.Duration = nil;
+    [super dealloc];
+}
+
+@end

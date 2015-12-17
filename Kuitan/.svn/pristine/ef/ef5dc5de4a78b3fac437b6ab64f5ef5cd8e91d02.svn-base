@@ -1,0 +1,203 @@
+//
+//  MainViewController.m
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/15.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#define Url @"http://api.izhangchu.com/?methodName=HomeIndex&version=4.02&"
+#define Url2 @"http://api.izhangchu.com/?methodName=HomeIndex&version=1.0"
+#import "MainViewController.h"
+#import "ShouyeCell.h"
+#import "Shouye.h"
+#import "AFNetworking.h"
+#import "ImageModel.h"
+#import "SDCycleScrollView.h"
+#import "PCDetailViewController.h"
+#import "DownDetailUIViewController.h"
+
+@interface MainViewController () <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,SDCycleScrollViewDelegate>
+@property (nonatomic, retain) NSMutableArray *dataSource;
+@property (nonatomic, retain) UICollectionView  *collection;
+@property (nonatomic, retain) UICollectionReusableView *headerView;
+@property (nonatomic, retain) NSMutableArray *dataArray;
+
+
+@end
+
+@implementation MainViewController
+static NSString *const ID = @"cell";
+
+const int imageCount = 3;
+- (void)dealloc {
+    self.dataArray = nil;
+    [super dealloc];
+}
+- (NSMutableArray *)dataArray {
+    if (!_dataArray) {
+        self.dataArray = [NSMutableArray arrayWithCapacity:0];
+    }
+    return [[_dataArray retain] autorelease];
+}
+- (NSMutableArray *)dataSource {
+    if (!_dataSource) {
+        self.dataSource = [[NSMutableArray alloc] init];
+    }
+    return _dataSource;
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+    UICollectionViewFlowLayout *flowLayout = [[[UICollectionViewFlowLayout alloc] init] autorelease];
+    self.collection = [[UICollectionView alloc] initWithFrame:[[UIScreen mainScreen] bounds] collectionViewLayout:flowLayout];
+    
+    
+    self.collection.backgroundColor = [UIColor whiteColor];
+    self.collection.dataSource = self;
+    self.collection.delegate = self;
+    [self.collection registerClass:[ShouyeCell class] forCellWithReuseIdentifier:ID];
+    [self.view addSubview:self.collection];
+    [self.collection release];
+    flowLayout.headerReferenceSize = CGSizeMake(self.view.frame.size.width , self.view.frame.size.height*0.3);
+ 
+    //注册页眉
+    [self.collection registerClass:[UICollectionReusableView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:@"header"];
+    [self readData];
+    [self readDownData];
+}
+- (void)readData {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager POST:Url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        NSLog(@"%@",responseObject);
+//        NSLog(@"%@",responseObject[@"data"][@"banner"]);
+        [self parserData:responseObject];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+- (void)readDownData {
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+    [manager POST:Url2 parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        [self parserDownData:responseObject];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+    }];
+}
+- (void)parserData:(id)responseObject {
+    NSArray *array = responseObject[@"data"][@"banner"];
+    for (NSDictionary *dic in array) {
+        ImageModel *model = [[ImageModel alloc] initWithDictionary:dic];
+        [self.dataSource addObject:model];
+    }
+//    NSLog(@"***************%ld",_dataSource.count);
+//    NSLog(@"%@",_dataSource);
+    [self layoutSubview];
+    
+}
+- (void)parserDownData:(id)responseObject {
+    NSArray *array = responseObject[@"data"][@"category"][@"data"];
+    for (NSDictionary *dict in array) {
+        Shouye *shouye = [[Shouye alloc] initWithDictionary:dict];
+        [self.dataArray addObject:shouye];
+        [shouye release];
+    }
+    [self.collection reloadData];
+}
+
+- (void)layoutSubview {
+    ImageModel *model = _dataSource[0];
+    ImageModel *model1 = _dataSource[1];
+    ImageModel *model2 = _dataSource[2];
+    NSString *str1 = model.banner_picture;
+    NSString *str2 = model1.banner_picture;
+    NSString *str3 = model2.banner_picture;
+    NSArray *imageArray = @[str1,str2,str3];
+    NSLog(@"%@",imageArray);
+    
+    SDCycleScrollView *cycle = [SDCycleScrollView cycleScrollViewWithFrame:CGRectMake(0, 0, self.view.frame.size.width , self.view.frame.size.height*0.3) imagesGroup:nil];
+    cycle.pageControlAliment = SDCycleScrollViewPageContolAlimentRight;
+    cycle.delegate = self;
+    [self.headerView addSubview:cycle];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        cycle.imageURLStringsGroup = imageArray;
+    });
+}
+- (void)cycleScrollView:(SDCycleScrollView *)cycleScrollView didSelectItemAtIndex:(NSInteger)index {
+    PCDetailViewController *datailVC = [[PCDetailViewController alloc] init];
+    ImageModel *model = self.dataSource[index];
+    datailVC.detailId = model.banner_id;
+    NSLog(@"%@",datailVC.detailId);
+    [self.navigationController pushViewController:datailVC animated:YES];
+}
+
+#pragma mark -UICollectionViewDataSource-
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.dataArray.count;
+}
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    ShouyeCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:ID forIndexPath:indexPath];
+    Shouye *model = self.dataArray[indexPath.row];
+    cell.shouye = model;
+    return cell;
+}
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    self.headerView = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:@"header" forIndexPath:indexPath];
+    return _headerView;
+}
+
+
+#pragma mark -UICollectionViewDelegate -
+
+//选择了某个cell
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DownDetailUIViewController *downVC = [[DownDetailUIViewController alloc] init];
+//    NextDownViewController *nextVC = [[NextDownViewController alloc] init];
+    Shouye *model = _dataArray[indexPath.row];
+    downVC.shuibian = model.text;
+    downVC.ID = model.Id;
+    [self.navigationController pushViewController:downVC animated:YES];
+    [downVC release];
+    
+}
+
+//返回这个UICollectionView是否可以被选择
+-(BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+#pragma mark -UICollectionViewDelegateFlowLayout -
+//定义每个UICollectionViewCell 的大小
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return CGSizeMake((self.view.frame.size.width-100)/2 , (self.view.frame.size.width-60)/2);
+}
+//定义每个section 的 margin
+-(UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section
+{
+    return UIEdgeInsetsMake(30, 30, 30, 30);
+}
+//返回头headerView的大小
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
+    return CGSizeMake(self.view.frame.size.width , self.view.frame.size.height*0.3);
+}
+
+//每个item之间的间距
+- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section
+{
+    return 20;
+}
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+}
+
+
+
+@end

@@ -1,0 +1,14 @@
+//
+//  DetailViewController.h
+//  Kuitan
+//
+//  Created by laouhn on 15/10/18.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface PCDetailViewController : UIViewController
+@property (nonatomic, copy) NSString *detailId;
+
+@end

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>734D20B6-9365-49CC-B6B6-CBCEA73533C5</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Kuitan</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>80e1422b-cfd4-4438-9db6-11283c4181bd++8103</key>
+		<string>http://www.svnchina.com/svn/class39/lanousupergod/Kuitan</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Kuitan.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>80e1422b-cfd4-4438-9db6-11283c4181bd++8103</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectRepositoryRootDictionary</key>
+	<dict>
+		<key>80e1422b-cfd4-4438-9db6-11283c4181bd++8103</key>
+		<string>http://www.svnchina.com/svn/class39</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>http://www.svnchina.com/svn/class39/lanousupergod/Kuitan/Kuitan.xcodeproj</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>80e1422b-cfd4-4438-9db6-11283c4181bd++8103</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.subversion</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>80e1422b-cfd4-4438-9db6-11283c4181bd++8103</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Kuitan</string>
+		</dict>
+	</array>
+</dict>
+</plist>

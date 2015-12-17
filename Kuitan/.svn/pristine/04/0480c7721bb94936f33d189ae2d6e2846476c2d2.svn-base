@@ -1,0 +1,227 @@
+//
+//  DetailViewController.m
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/16.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+#define WIDTH [[UIScreen mainScreen] applicationFrame].size.width
+#import "DetailViewController.h"
+#import "AFNetworking.h"
+#import "MeiShi.h"
+#import "DetailModel.h"
+#import "DetailTableViewCell.h"
+#import "MJRefresh.h"
+#import "MJRefreshFooterView.h"
+#import "MovieStepViewController.h"
+#import "PictureViewController.h"
+#import "MBProgressHUD.h"
+#import "MainNavigationController.h"
+#import "ListViewController.h"
+
+@interface DetailViewController ()
+
+@property (nonatomic,retain) NSMutableArray *dataSource;
+@property (nonatomic,assign) NSInteger count;
+@end
+
+
+@implementation DetailViewController
+
+- (void)dealloc {
+    self.Id = nil;
+    self.text = nil;
+    self.dataSource = nil;
+    [super dealloc];
+}
+
+- (NSMutableArray *)dataSource {
+    if (!_dataSource) {
+        self.dataSource = [NSMutableArray arrayWithCapacity:0];
+    }
+    return [[_dataSource retain] autorelease];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.count = 0;
+    self.navigationItem.title = self.text;
+    [self readData];
+    
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.tableView addFooterWithTarget:self action:@selector(handleFooter:)];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(handleBack)];
+       
+//    self.tableView.bounces = NO;
+
+}
+
+- (void)handleBack {
+    if (self.flag == 0) {
+        self.tabBarController.tabBar.hidden = NO;
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    if (self.flag == 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+/*
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+//    DetailTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:nil];
+//    cell.titleLabel.frame = CGRectMake(30, 20, size.height, self.tableView.rowHeight / 4);
+//    NSLog(@"%@",NSStringFromCGSize(size));
+}
+*/
+
+
+
+
+- (void)handleFooter:(id)footer {
+    self.count += 20;
+    NSLog(@"%ld",_count);
+    [self readData];
+    [self.tableView reloadData];
+    [self.tableView footerEndRefreshing];
+}
+
+
+
+- (void)readData {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+   
+    [manager POST:[NSString stringWithFormat:@"%@limit=20&scene=t1&tagid=%@&uuid=c5b781e311b6e1d18af5e2e536a88c7a&offset=%ld",DetailUrl,self.Id,self.count] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+//        NSLog(@"*******%ld",[responseObject[@"result"][@"list"] count]);
+        [self parserData:responseObject];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"%@",error);
+    }];
+}
+
+- (void)parserData:(id)data {
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [self registerCell];
+    NSDictionary *dic = data[@"result"];
+    NSArray *arr = dic[@"list"];
+//    [self.dataSource removeAllObjects];
+    for (NSDictionary *dic in arr) {
+        DetailModel *model = [[DetailModel alloc] initWithDictionary:dic];
+        [self.dataSource addObject:model];
+    }
+    
+//    NSLog(@"%@",_dataSource);
+    [self.tableView reloadData];
+}
+- (void)registerCell {
+    [self.tableView registerClass:[DetailTableViewCell class] forCellReuseIdentifier:@"cell"];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.rowHeight = WIDTH  / 6 + WIDTH / 20;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+//#warning Potentially incomplete method implementation.
+    // Return the number of sections.
+
+    if (self.count + 20 > _dataSource.count ) {
+        return _dataSource.count;
+    }
+    return self.count + 20;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+//#warning Incomplete method implementation.
+    // Return the number of rows in the section.
+    return 1;
+}
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    DetailTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    cell.videoImage.image = nil;
+    // Configure the cell...
+    DetailModel *model = self.dataSource[indexPath.section];
+    cell.model = model;
+    if (model.Duration.length != 0) {
+        cell.videoImage.image = [UIImage imageNamed:@"iconfont-jingxuanshipin"];
+    }
+//    cell.textLabel.text = [NSString stringWithFormat:@"%ld",indexPath.section];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    MovieStepViewController *mStepVC = [[MovieStepViewController alloc] init];
+    PictureViewController *picVC = [[PictureViewController alloc] init];
+    
+    DetailModel *model = self.dataSource[indexPath.section];
+    if (model.HasVideo == 1) {
+        mStepVC.movieId = model.RecipeId;
+        mStepVC.hasVideo = model.HasVideo;
+        mStepVC.Duration = model.Duration;
+        mStepVC.recipedId = model.RecipeId;
+        [self.navigationController pushViewController:mStepVC animated:YES];
+        self.tabBarController.tabBar.hidden = YES;
+    } else {
+        picVC.picId = model.RecipeId;
+        [self.navigationController pushViewController:picVC animated:YES];
+        self.tabBarController.tabBar.hidden = YES;
+    }
+    [mStepVC release];
+    [picVC release];
+}
+
+
+/*
+// Override to support conditional editing of the table view.
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the specified item to be editable.
+    return YES;
+}
+*/
+
+/*
+// Override to support editing the table view.
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    }   
+}
+*/
+
+/*
+// Override to support rearranging the table view.
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+}
+*/
+
+/*
+// Override to support conditional rearranging of the table view.
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    // Return NO if you do not want the item to be re-orderable.
+    return YES;
+}
+*/
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

@@ -1,0 +1,25 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "80e1422b-cfd4-4438-9db6-11283c4181bd++8103",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+    "80e1422b-cfd4-4438-9db6-11283c4181bd++8103" : {
+
+    }
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "80e1422b-cfd4-4438-9db6-11283c4181bd++8103" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "734D20B6-9365-49CC-B6B6-CBCEA73533C5",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "80e1422b-cfd4-4438-9db6-11283c4181bd++8103" : "Kuitan"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "Kuitan",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Kuitan.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/www.svnchina.com\/svn\/class39",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "80e1422b-cfd4-4438-9db6-11283c4181bd++8103"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+//
+//  ShouyeCell.m
+//  Kuitan
+//
+//  Created by laouhn on 15/10/16.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#import "ShouyeCell.h"
+#import "Shouye.h"
+#import "UIImageView+WebCache.h"
+@interface ShouyeCell ()
+@property (nonatomic, retain) UIImageView *imageView;
+@property (nonatomic, retain) UILabel *titleLabel;
+
+@end
+
+
+@implementation ShouyeCell
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self.contentView addSubview:self.imageView];
+        [self.contentView addSubview:self.titleLabel];
+    }
+    return self;
+}
+
+- (UIImageView *)imageView {
+    if (!_imageView) {
+        self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height - 30)];
+//        _imageView.backgroundColor = [UIColor grayColor];
+        _imageView.layer.masksToBounds = YES;
+        _imageView.layer.cornerRadius = 5;
+//        _imageView.clipsToBounds = YES;
+    }
+    return [[_imageView retain] autorelease];
+}
+- (UILabel *)titleLabel {
+    if (!_titleLabel) {
+        self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 30, self.frame.size.width, 30)];
+//        _titleLabel.backgroundColor = [UIColor redColor];
+
+        _titleLabel.textAlignment = NSTextAlignmentCenter;
+        _titleLabel.font = [UIFont systemFontOfSize:15];
+    }
+    return [[_titleLabel retain] autorelease];
+}
+- (void)setShouye:(Shouye *)shouye {
+    if (_shouye!= shouye) {
+        [_shouye release];
+    }
+    NSString *string = shouye.image;
+    NSURL *url = [NSURL URLWithString:string];
+//    NSData *data = [NSData dataWithContentsOfURL:url];
+//    self.imageView.image = [UIImage imageWithData:data];
+    [self.imageView sd_setImageWithURL:url placeholderImage:[UIImage imageNamed:@"321"]];
+
+    self.titleLabel.text = shouye.text;
+}
+@end

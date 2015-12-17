@@ -1,0 +1,13 @@
+//
+//  PictureViewController.h
+//  Kuitan
+//
+//  Created by lanouhn on 15/10/19.
+//  Copyright (c) 2015年 S&G. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface PictureViewController : UIViewController
+@property (nonatomic,retain) NSNumber *picId;
+@end
